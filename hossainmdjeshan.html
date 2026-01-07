@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Silly Story Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    /* the story styles are handled by the external CSS */
+  </style>
+</head>
+<body>
+  <h3>SILLYSTORY GENERATOR</h3>
+
+
+  <div>
+    <label for="custom-name">Enter custom name:</label>
+    <input id="custom-name" type="text" placeholder="" />
+  </div>
+
+
+  <fieldset>
+    <legend>Choose language:</legend>
+    <label for="us">US</label>
+    <input id="us" type="radio" name="lang" value="us" checked />
+    <label for="uk">UK</label>
+    <input id="uk" type="radio" name="lang" value="uk" />
+    <label for="ita">ITA</label>
+    <input id="ita" type="radio" name="lang" value="ita" />
+  </fieldset>
+
+
+  <div class="controls">
+    <div>
+      <button class="generate">Generate random story</button>
+    </div>
+
+    <div>
+      <label for="fontFamily">Font:</label>
+      <select id="fontFamily">
+        <option value="Arial, Helvetica, sans-serif">Arial</option>
+        <option value="Georgia, serif">Georgia</option>
+        <option value="\"Courier New\", Courier, monospace">Courier New</option>
+        <option value="\"Times New Roman\", Times, serif">Times New Roman</option>
+        <option value="\"Comic Sans MS\", Comic Sans, cursive">Comic Sans MS</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="fontSizeSelect">Font Size:</label>
+      <select id="fontSizeSelect"></select>
+    </div>
+
+    <div>
+      <label for="textColorPicker">Text Color:</label>
+      <input type="color" id="textColorPicker" value="#000000" />
+    </div>
+  </div>
+
+
+  <p class="story"></p>
+
+
+  <!-- Utility controls -->
+  <div style="margin-top: 12px;">
+    <button id="reset">Reset</button>
+    <button id="save">Save Story</button>
+  </div>
+
+
+  <script>
+    const customName = document.getElementById("custom-name");
+    const generateBtn = document.querySelector(".generate");
+    const story = document.querySelector(".story");
+    const resetBtn = document.getElementById("reset");
+    const saveBtn = document.getElementById("save");
+    const fontSizeSelect = document.getElementById("fontSizeSelect");
+    const fontFamilySelect = document.getElementById("fontFamily");
+    const textColorPicker = document.getElementById("textColorPicker");
+
+
+    function randomValueFromArray(array) {
+      const random = Math.floor(Math.random() * array.length);
+      return array[random];
+    }
+
+
+    const characters = ["Willy the Goblin", "Big Daddy", "Father Christmas"];
+    const places = ["the soup kitchen", "Disneyland", "the White House"];
+    const events = [
+      "spontaneously combusted",
+      "melted into a puddle on the sidewalk",
+      "turned into a slug and slithered away",
+    ];
+
+
+    function returnRandomStoryString() {
+      const randomCharacter = randomValueFromArray(characters);
+      const randomPlace = randomValueFromArray(places);
+      const randomEvent = randomValueFromArray(events);
+
+
+      let storyText = `It was 94 Fahrenheit outside, so ${randomCharacter} went for a walk. When they got to ${randomPlace}, they stared in horror for a few moments, then ${randomEvent}. Bob saw the whole thing, but was not surprised — ${randomCharacter} weighs 300 pounds, and it was a hot day.`;
+
+
+      return storyText;
+    }
+
+
+    generateBtn.addEventListener("click", generateStory);
+
+    // Build font size dropdown (8 to 20)
+    for (let i = 8; i <= 20; i++) {
+      const option = document.createElement("option");
+      option.value = i;
+      option.textContent = i + " px";
+      fontSizeSelect.appendChild(option);
+    }
+    fontSizeSelect.value = 16; // default
+
+    // Apply initial font family, size, and color
+    story.style.fontFamily = fontFamilySelect.value;
+    story.style.fontSize = fontSizeSelect.value + "px";
+    story.style.color = textColorPicker.value;
+
+
+    // Default names per language
+    const defaultNames = {
+      us: ["Alice", "Bob", "Charlie"],
+      uk: ["Oliver", "Nigel", "Harry"],
+      ita: ["Gianni", "Martina", "Luca"],
+    };
+
+    // Locale content map
+    const localeContent = {
+      us: {
+        characters: ["Willy the Goblin", "Big Daddy", "Father Christmas"],
+        places: ["the soup kitchen", "Disneyland", "the White House"],
+        events: [
+          "spontaneously combusted",
+          "melted into a puddle on the sidewalk",
+          "turned into a slug and slithered away",
+        ],
+      },
+      uk: {
+        characters: ["Willy the Goblin", "Captain UK", "Father Christmas"],
+        places: ["the soup kitchen", "Alton Towers", "Buckingham Palace"],
+        events: [
+          "sipped a cuppa and smiled",
+          "found a stiff upper lip",
+          "stole someone's umbrella",
+        ],
+      },
+      ita: {
+        // Italian required characters and places
+        characters: ["Batman", "Topo Gigio", "Godzilla"],
+        places: ["il BEM", "Gardaland", "il Quirinale"],
+        events: [
+          "si mise a cantare una canzone",
+          "iniziò a ballare per strada",
+          "salì su un gelato gigante",
+        ],
+      },
+    };
+
+    function setLocaleContent(lang) {
+      const content = localeContent[lang] || localeContent.us;
+      characters.length = 0;
+      places.length = 0;
+      events.length = 0;
+      content.characters.forEach((c) => characters.push(c));
+      content.places.forEach((p) => places.push(p));
+      content.events.forEach((e) => events.push(e));
+
+      // Set a default placeholder name for the language
+      const defNames = defaultNames[lang] || defaultNames.us;
+      const pick = defNames[Math.floor(Math.random() * defNames.length)];
+      customName.placeholder = pick;
+      if (!customName.value) customName.value = "";
+    }
+
+    const radios = document.querySelectorAll('input[name="lang"]');
+    radios.forEach((r) => {
+      r.addEventListener("change", (ev) => {
+        setLocaleContent(ev.target.value);
+        generateStory();
+      });
+    });
+
+    // Initialize the default locale
+    const initialLang = document.querySelector('input[name="lang"]:checked').value;
+    setLocaleContent(initialLang);
+
+    function generateStory() {
+      let newStory = returnRandomStoryString();
+      const selectedLang = document.querySelector('input[name="lang"]:checked').value;
+
+
+      // If custom name is empty, use the locale placeholder; otherwise, use entered name
+      let nameToUse = customName.value;
+      if (!nameToUse) nameToUse = customName.placeholder || "Bob";
+      newStory = newStory.replace("Bob", nameToUse);
+
+
+      if (selectedLang === "uk") {
+        const weight = `${Math.round(300 / 14)} stone`;
+        const temperature = `${Math.round((94 - 32) * (5 / 9))} Celsius`;
+        newStory = newStory.replace("300 pounds", weight);
+        newStory = newStory.replace("94 Fahrenheit", temperature);
+      }
+
+      // Italian translations and conversions
+      if (selectedLang === "ita") {
+        // Replace units with metric and translate text
+        const kg = Math.round(300 * 0.453592);
+        const temperature = `${Math.round((94 - 32) * (5 / 9))} gradi`;
+        // If template still includes Fahrenheit and pounds replace
+        newStory = newStory.replace("300 pounds", `${kg} kg`);
+        newStory = newStory.replace("94 Fahrenheit", `${temperature}`);
+        // Translate the rest of the story by a basic replacement of phrases
+        newStory = newStory
+          .replace("It was", "C'era")
+          .replace("outside, so", "gradi fuori, quindi")
+          .replace("went for a walk.", "fece una passeggiata.")
+          .replace("When they got to", "Quando arrivarono a")
+          .replace(", they stared in horror for a few moments, then", ", rimasero esterrefatti per qualche istante, poi")
+          .replace("Bob saw the whole thing, but was not surprised —", "Bob vide tutto, ma non rimase sorpreso —")
+          .replace("and it was a hot day.", "e faceva molto caldo.");
+      }
+
+
+      story.textContent = newStory;
+      story.style.visibility = "visible";
+    }
+
+
+    // Reset functionality
+    resetBtn.addEventListener("click", () => {
+      story.textContent = "";
+      story.style.visibility = "hidden";
+      customName.value = "";
+      document.getElementById("uk").checked = false;
+    });
+
+
+    // Text color change
+    textColorPicker.addEventListener("input", () => {
+      story.style.color = textColorPicker.value;
+    });
+
+
+    // Save story to file
+    saveBtn.addEventListener("click", () => {
+      if (story.textContent.trim() === "") return alert("No story to save!");
+      const blob = new Blob([story.textContent], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "story.txt";
+      link.click();
+      URL.revokeObjectURL(link.href);
+    });
+
+
+    // Font family change
+    fontFamilySelect.addEventListener("change", () => {
+      story.style.fontFamily = fontFamilySelect.value;
+    });
+
+    // Font size change from dropdown
+    fontSizeSelect.addEventListener("change", () => {
+      story.style.fontSize = `${fontSizeSelect.value}px`;
+    });
+  </script>
+</body>
+</html>
