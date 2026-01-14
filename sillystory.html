@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Silly Story Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .story {
+      background-color: lightyellow;
+      padding: 10px;
+      border-radius: 5px;
+      visibility: hidden;
+      margin-top: 10px;
+      white-space: pre-wrap;
+    }
+    .highlight { background: yellow; padding: 0 2px; border-radius: 2px; }
+  </style>
+</head>
+<body>
+
+  <h3>SILLYSTORY GENERATOR</h3>
+
+  <div>
+    <label for="custom-name">Enter custom name:</label>
+    <input id="custom-name" type="text" />
+  </div>
+
+  <fieldset>
+    <legend>Choose locale:</legend>
+    <label for="us">US</label>
+<<<<<<< HEAD
+    <input id="us" type="radio" name="uk-us" value="us" checked />
+    <label for="uk">UK</label>
+    <input id="uk" type="radio" name="uk-us" value="uk" />
+=======
+    <input id="us" type="radio" name="uk-us" value="us" />
+    <label for="uk">UK</label>
+    <input id="uk" type="radio" name="uk-us" value="uk" checked />
+>>>>>>> 4e438300c0548612c0db8d4653559883d04d4163
+  </fieldset>
+
+  <div>
+    <button class="generate">Generate random story</button>
+  </div>
+
+  <p class="story"></p>
+
+  <!-- SEARCH CONTROLS -->
+  <div class="search-controls">
+    <input id="search-input" type="text" placeholder="Cerca parola..." />
+    <button id="search-btn">Cerca</button>
+    <button id="clear-search">Cancella</button>
+  </div>
+
+  <!-- NEW BUTTONS -->
+  <button id="reset">Reset</button>
+  <input type="color" id="bgColorPicker" value="#ffff99" />
+  <button id="save">Save Story</button>
+
+  <label for="fontSize">Font Size:</label>
+  <input type="number" id="fontSize" value="16" min="10" max="48" /> px
+
+  <br><br>
+
+  <!-- SHIFT & ENCRYPT SECTION -->
+  <label for="shift">Shift:</label>
+  <input type="number" id="shift" value="1" min="1" max="25" />
+  <button id="encryptBtn">Encrypt Story</button>
+
+  <script>
+    const customName = document.getElementById("custom-name");
+    const generateBtn = document.querySelector(".generate");
+    const story = document.querySelector(".story");
+    const resetBtn = document.getElementById("reset");
+    const colorPicker = document.getElementById("bgColorPicker");
+    const saveBtn = document.getElementById("save");
+    const fontSizeInput = document.getElementById("fontSize");
+    const shiftInput = document.getElementById("shift");
+    const encryptBtn = document.getElementById("encryptBtn");
+
+    function randomValueFromArray(array) {
+      return array[Math.floor(Math.random() * array.length)];
+    }
+
+    const characters = ["Willy the Goblin", "Big Daddy", "Father Christmas"];
+    const places = ["the soup kitchen", "Disneyland", "the White House"];
+    const events = [
+      "spontaneously combusted",
+      "melted into a puddle on the sidewalk",
+      "turned into a slug and slithered away",
+    ];
+
+    function returnRandomStoryString() {
+      const randomCharacter = randomValueFromArray(characters);
+      const randomPlace = randomValueFromArray(places);
+      const randomEvent = randomValueFromArray(events);
+
+      return `It was 94 Fahrenheit outside, so ${randomCharacter} went for a walk. When they got to ${randomPlace}, they stared in horror for a few moments, then ${randomEvent}. Bob saw the whole thing, but was not surprised — ${randomCharacter} weighs 300 pounds, and it was a hot day.`;
+    }
+
+    generateBtn.addEventListener("click", generateStory);
+
+    function generateStory() {
+      let newStory = returnRandomStoryString();
+
+      if (customName.value !== "") {
+        newStory = newStory.replace("Bob", customName.value);
+      }
+
+<<<<<<< HEAD
+      if (document.getElementById("uk").checked) {
+=======
+      if (document.getElementById("us").checked) {
+>>>>>>> 4e438300c0548612c0db8d4653559883d04d4163
+        const weight = `${Math.round(300 / 14)} stone`;
+        const temperature = `${Math.round((94 - 32) * (5 / 9))} Celsius`;
+        newStory = newStory.replace("300 pounds", weight);
+        newStory = newStory.replace("94 Fahrenheit", temperature);
+      }
+
+        // store raw text so search/highlight can restore it
+        story.dataset.raw = newStory;
+        story.textContent = newStory;
+        story.style.visibility = "visible";
+    }
+
+    // RESET
+    resetBtn.addEventListener("click", () => {
+      story.textContent = "";
+      story.style.visibility = "hidden";
+      customName.value = "";
+      document.getElementById("uk").checked = false;
+    });
+
+    // COLOR PICKER
+    colorPicker.addEventListener("input", () => {
+      story.style.backgroundColor = colorPicker.value;
+    });
+
+    // SAVE FILE
+    // SAVE FILE: try File System Access API (suggest Desktop), fallback to download
+    async function saveStoryToFile() {
+      if (!story.textContent.trim()) return alert("No story to save!");
+      const filename = 'story.txt';
+
+      if (window.showSaveFilePicker) {
+        try {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: filename,
+            types: [{ description: 'Text Files', accept: { 'text/plain': ['.txt'] } }],
+            startIn: 'desktop'
+          });
+          const writable = await handle.createWritable();
+          await writable.write(story.textContent);
+          await writable.close();
+          alert('Storia salvata (posizione selezionata).');
+          return;
+        } catch (err) {
+          // user cancelled or API error — fallthrough to fallback
+        }
+      }
+
+      const blob = new Blob([story.textContent], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(link.href);
+      alert('Download avviato (controlla la cartella Download).');
+    }
+
+    saveBtn.addEventListener('click', () => { saveStoryToFile(); });
+
+    // FONT SIZE
+    fontSizeInput.addEventListener("input", () => {
+      story.style.fontSize = `${fontSizeInput.value}px`;
+    });
+
+    // --- CIPHER FUNCTION ---
+    function caesarCipher(str, shift) {
+      return str.replace(/[a-z]/gi, char => {
+        const base = char >= "a" && char <= "z" ? 97 : 65;
+        return String.fromCharCode((char.charCodeAt(0) - base + shift) % 26 + base);
+      });
+    }
+
+    // ENCRYPT STORY
+    encryptBtn.addEventListener("click", () => {
+      if (!story.textContent.trim()) return alert("Generate a story first!");
+      const shift = parseInt(shiftInput.value);
+      story.textContent = caesarCipher(story.textContent, shift);
+    });
+
+    // SEARCH / HIGHLIGHT
+    const searchInput = document.getElementById('search-input');
+    const searchBtn = document.getElementById('search-btn');
+    const clearSearchBtn = document.getElementById('clear-search');
+
+    function escapeRegExp(string) {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function highlightSearch() {
+      const term = searchInput.value.trim();
+      const raw = story.dataset.raw || story.textContent || '';
+      if (!raw) return alert('Genera prima la storia.');
+      if (!term) return alert('Inserisci una parola da cercare.');
+
+      const regex = new RegExp(`(${escapeRegExp(term)})`, 'gi');
+      const html = raw.replace(regex, '<span class="highlight">$1</span>');
+      story.innerHTML = html;
+
+      const first = story.querySelector('.highlight');
+      if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function clearSearch() {
+      const raw = story.dataset.raw || '';
+      story.textContent = raw;
+      searchInput.value = '';
+    }
+
+    searchBtn.addEventListener('click', highlightSearch);
+    clearSearchBtn.addEventListener('click', clearSearch);
+    searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') highlightSearch(); });
+  </script>
+
+</body>
+<<<<<<< HEAD
+</html>
+=======
+</html>
+>>>>>>> 4e438300c0548612c0db8d46535

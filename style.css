@@ -1,0 +1,99 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+/* BODY */
+body {
+    background: #f4f6f8;
+    color: #1f2933;
+    line-height: 1.6;
+}
+
+/* HEADER */
+.header {
+    background: #8fd3d8;
+    padding: 90px 20px;
+    text-align: center;
+}
+
+.header h1 {
+    font-size: 42px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+/* SEZIONI */
+.section {
+    padding: 70px 15%;
+    text-align: center;
+}
+
+.section h2 {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.section p {
+    max-width: 750px;
+    margin: auto;
+    font-size: 16px;
+}
+
+/* SEZIONE CHIARA */
+.light {
+    background: #ffffff;
+}
+
+/* GRID */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+/* INTEREST BOX */
+.box {
+    background: #8fd3d8;
+    color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+/* PROJECT LINK */
+.card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+/* PROJECT CARD */
+.card {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* HOVER EFFECT */
+.card-link:hover .card {
+    transform: translateY(-12px);
+    box-shadow: 0 20px 35px rgba(0,0,0,0.15);
+    cursor: pointer;
+}
+
+/* FOOTER */
+.footer {
+    background: #1f2933;
+    color: #cccccc;
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+}
+    
