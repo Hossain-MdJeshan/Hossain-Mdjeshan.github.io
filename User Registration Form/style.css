@@ -1,269 +1,145 @@
-<?php
 
-$errors = [];
-$submitted = false;
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    
-
-    $last_name = trim($_POST["last_name"]);
-    $first_name = trim($_POST["first_name"]);
-    $date_of_birth = trim($_POST["date_of_birth"]);
-    $place_of_birth = trim($_POST["place_of_birth"]);
-    $address = trim($_POST["address"]);
-    $city = trim($_POST["city"]);
-    $province = trim($_POST["province"]);
-    $postal_code = trim($_POST["postal_code"]);
-    $phone = trim($_POST["phone"]);
-    $email = trim($_POST["email"]);
-    $tax_code = trim($_POST["tax_code"]);
-
-    $password = $_POST["password"];
-    $password_confirmation = $_POST["password_confirmation"];
-
-    
-
-    if ($last_name == "") {
-        $errors[] = "Enter last name.";
-    }
-
-    
-
-    if ($first_name == "") {
-        $errors[] = "Enter first name.";
-    }
-
-    
-
-    if ($date_of_birth == "") {
-        $errors[] = "Enter date of birth.";
-    }
-
-   
-
-    if ($place_of_birth == "") {
-        $errors[] = "Enter place of birth.";
-    }
-
-
-
-    if ($address == "") {
-        $errors[] = "Enter address.";
-    }
-
-   
-
-    if ($city == "") {
-        $errors[] = "Enter city.";
-    }
-
-    
-
-    if ($province == "") {
-        $errors[] = "Enter province.";
-    }
-
-    
-
-    if ($postal_code == "") {
-        $errors[] = "Enter postal code.";
-    }
-
- 
-
-    if ($phone == "") {
-        $errors[] = "Enter phone number.";
-    } elseif (!preg_match("/^[0-9+ ]+$/", $phone)) {
-        $errors[] = "Invalid phone number.";
-    }
-
-    
-
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = "Invalid email.";
-    }
-
-    
-
-    if (!preg_match("/^[A-Za-z0-9]{16}$/", $tax_code)) {
-        $errors[] = "Tax code must contain 16 characters.";
-    }
-
-    
-
-    if (strlen($password) < 8) {
-        $errors[] = "Password must contain at least 8 characters.";
-    }
-
-    if (!preg_match("/[0-9]/", $password)) {
-        $errors[] = "Password must contain at least 1 number.";
-    }
-
-    if (!preg_match("/[A-Z]/", $password)) {
-        $errors[] = "Password must contain at least 1 capital letter.";
-    }
-
-    if (!preg_match("/[a-z]/", $password)) {
-        $errors[] = "Password must contain at least 1 lowercase letter.";
-    }
-
-    if (!preg_match("/[^a-zA-Z0-9]/", $password)) {
-        $errors[] = "Password must contain at least 1 special character.";
-    }
-
-   
-
-    if ($password != $password_confirmation) {
-        $errors[] = "Passwords do not match.";
-    }
-
-   
-
-    if (!isset($_POST["privacy"])) {
-        $errors[] = "Accept the privacy option.";
-    }
-
-    
-
-    if (empty($errors)) {
-
-        $password = password_hash($password, PASSWORD_DEFAULT);
-        $submitted = true;
-
-    }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-?>
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg, #dbeafe, #eff6ff, #e0e7ff);
+    color: #1e293b;
+    min-height: 100vh;
+    padding: 40px 20px;
+}
 
-<!DOCTYPE html>
-<html lang="en">
+.container {
+    background-color: #ffffff;
+    max-width: 650px;
+    margin: 0 auto 30px auto;
+    padding: 35px;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
+    border: 1px solid #e2e8f0;
+}
 
-<head>
-    <meta charset="UTF-8">
-    <title>User registration form</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+h1 {
+    text-align: center;
+    color: #1d4ed8;
+    font-size: 28px;
+    margin-bottom: 30px;
+}
 
-<body>
+h2 {
+    color: #1d4ed8;
+    font-size: 23px;
+    margin-bottom: 20px;
+}
 
-<div class="container">
+label {
+    display: block;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 8px;
+    margin-top: 17px;
+    color: #334155;
+}
 
-    <h1>User registration form</h1>
+input[type="text"],
+input[type="email"],
+input[type="date"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: #f8fafc;
+    color: #1e293b;
+    transition: 0.3s;
+}
 
-    <form action="" method="POST">
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="date"]:focus,
+input[type="password"]:focus {
+    outline: none;
+    border-color: #2563eb;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
 
-        <label>Last Name:</label>
-        <input type="text" name="last_name" required>
+input[type="checkbox"] {
+    accent-color: #2563eb;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    vertical-align: middle;
+}
 
-        <label>First Name:</label>
-        <input type="text" name="first_name" required>
+label:has(input[type="checkbox"]) {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: normal;
+    margin-top: 22px;
+}
 
-        <label>Date of Birth:</label>
-        <input type="date" name="date_of_birth" required>
+input[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    margin-top: 25px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
 
-        <label>Place of Birth:</label>
-        <input type="text" name="place_of_birth" required>
+input[type="submit"]:hover {
+    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.25);
+}
 
-        <label>Address:</label>
-        <input type="text" name="address" required>
+.error {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border-left: 4px solid #dc2626;
+    padding: 12px;
+    margin-top: 12px;
+    border-radius: 6px;
+    font-size: 14px;
+}
 
-        <label>City:</label>
-        <input type="text" name="city" required>
+.container p {
+    padding: 12px;
+    margin-bottom: 8px;
+    background-color: #f8fafc;
+    border-left: 4px solid #2563eb;
+    border-radius: 6px;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
 
-        <label>Province:</label>
-        <input type="text" name="province" required>
-
-        <label>Postal Code:</label>
-        <input type="text" name="postal_code" required>
-
-        <label>Phone Number:</label>
-        <input type="text" name="phone" required>
-
-        <label>Email:</label>
-        <input type="email" name="email" required>
-
-        <label>Tax Code:</label>
-        <input type="text" name="tax_code" maxlength="16" required>
-
-        <label>Password:</label>
-        <input type="password" name="password" required>
-
-        <label>Password Confirmation:</label>
-        <input type="password" name="password_confirmation" required>
-
-        <label>
-            <input type="checkbox" name="privacy" value="yes" required>
-            Privacy and consent option
-        </label>
-
-        <input type="submit" value="Submit">
-
-    </form>
-
-    <?php
-
-    // Show errors
-
-    if (!empty($errors)) {
-
-        foreach ($errors as $error) {
-            echo "<p class='error'>" . htmlspecialchars($error) . "</p>";
-        }
-
+@media (max-width: 600px) {
+    body {
+        padding: 15px 10px;
     }
 
-    ?>
+    .container {
+        padding: 22px;
+    }
 
-</div>
+    h1 {
+        font-size: 23px;
+    }
 
-<?php
-
-
-
-if ($submitted == true) {
-
-?>
-
-<div class="container">
-
-    <h2>Submitted Information</h2>
-
-    <h2>User registration data:</h2>
-
-    <p>Last Name: <?php echo htmlspecialchars($last_name); ?></p>
-
-    <p>First Name: <?php echo htmlspecialchars($first_name); ?></p>
-
-    <p>Date of Birth: <?php echo htmlspecialchars($date_of_birth); ?></p>
-
-    <p>Place of Birth: <?php echo htmlspecialchars($place_of_birth); ?></p>
-
-    <p>Address: <?php echo htmlspecialchars($address); ?></p>
-
-    <p>City: <?php echo htmlspecialchars($city); ?></p>
-
-    <p>Province: <?php echo htmlspecialchars($province); ?></p>
-
-    <p>Postal Code: <?php echo htmlspecialchars($postal_code); ?></p>
-
-    <p>Phone: <?php echo htmlspecialchars($phone); ?></p>
-
-    <p>Email: <?php echo htmlspecialchars($email); ?></p>
-
-    <p>Tax Code: <?php echo htmlspecialchars($tax_code); ?></p>
-
-    <p>Password: Protected</p>
-
-    <p>Password confirmation: Protected</p>
-
-    <p>Privacy option: OK</p>
-
-</div>
-
-<?php
+    h2 {
+        font-size: 20px;
+    }
 }
-?>
-
-</body>
-</html>
